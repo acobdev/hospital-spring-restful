@@ -1,0 +1,5 @@
+/home/acobano/NetBeansProjects/hospital-spring-restful/src/test/java/dev/acobano/springrestful/hospital/controladores/MedicoControladorTest.java
+/home/acobano/NetBeansProjects/hospital-spring-restful/src/test/java/dev/acobano/springrestful/hospital/servicios/implementaciones/MedicoServicioImplTest.java
+/home/acobano/NetBeansProjects/hospital-spring-restful/src/test/java/dev/acobano/springrestful/hospital/mapeadores/implementaciones/FechaMapeadorImplTest.java
+/home/acobano/NetBeansProjects/hospital-spring-restful/src/test/java/dev/acobano/springrestful/hospital/mapeadores/implementaciones/PacienteMapeadorImplTest.java
+/home/acobano/NetBeansProjects/hospital-spring-restful/src/test/java/dev/acobano/springrestful/hospital/mapeadores/implementaciones/MedicoMapeadorImplTest.java

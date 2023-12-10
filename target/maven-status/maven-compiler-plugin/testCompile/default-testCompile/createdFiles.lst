@@ -1,0 +1,5 @@
+dev/acobano/springrestful/hospital/mapeadores/implementaciones/MedicoMapeadorImplTest.class
+dev/acobano/springrestful/hospital/controladores/MedicoControladorTest.class
+dev/acobano/springrestful/hospital/mapeadores/implementaciones/FechaMapeadorImplTest.class
+dev/acobano/springrestful/hospital/servicios/implementaciones/MedicoServicioImplTest.class
+dev/acobano/springrestful/hospital/mapeadores/implementaciones/PacienteMapeadorImplTest.class

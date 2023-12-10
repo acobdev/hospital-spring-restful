@@ -1,0 +1,806 @@
+{
+	"info": {
+		"_postman_id": "757d2710-7955-466d-b91b-adffb33fb9a2",
+		"name": "Hospital Spring API RESTful",
+		"description": "Colección Postman de request HTTP con toda la gestión de microservicios API RESTful relacionadas con la aplicación Spring titulada 'hospital-spring-restful'\n\n@author Álvaro Cobano",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27879457"
+	},
+	"item": [
+		{
+			"name": "Médicos",
+			"item": [
+				{
+					"name": "Guardar nuevo médico",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Daniel\",\n    \"apellidos\": \"Ferrero Portillo\",\n    \"dni\": \"90190141C\",\n    \"email\": \"hugomedico@mail.com\",\n    \"especialidad\": \"CARDIOLOGIA\",\n    \"fechaGraduacion\": \"13/05/1987\",\n    \"fechaIncorporacion\": \"26/11/1998\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/hospital/api/medicos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar médico por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener lista de médicos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener pacientes asignados a un médico",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos/1/pacientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos",
+								"1",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar médicos por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos?nombre=José Luis",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "José Luis"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar médicos por especialidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos?especialidad=CIRUGIA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							],
+							"query": [
+								{
+									"key": "especialidad",
+									"value": "CIRUGIA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtrar médicos por nombre y especialidad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos?nombre=José Luis&especialidad=CIRUGIA",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "José Luis"
+								},
+								{
+									"key": "especialidad",
+									"value": "CIRUGIA"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar médico por ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"especialidad\": \"CIRUGIA\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar médico por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/medicos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar todos los médicos",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/hospital/api/medicos",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"medicos"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Colección de endpoints relacionadas con el CRUD en la BBDD del sistema de cualquier entidad de la clase 'Médico'"
+		},
+		{
+			"name": "Pacientes",
+			"item": [
+				{
+					"name": "Guardar nuevo paciente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Julia\",\n    \"apellidos\": \"Valero Arjona\",\n    \"dni\": \"13178724T\",\n    \"email\": \"juliavalero73@mail.net\",\n    \"telefono\": \"681555117\",\n    \"genero\": \"FEMENINO\",\n    \"direccion\": \"C/ Esperanza Pedralbes, 78\",\n    \"gravedad\": \"LEVE\",\n    \"fechaNacimiento\": \"22/07/1973 13:35:00\",\n    \"fechaIngreso\": \"06/10/2012 20:45:30\",\n    \"medicoId\": 1\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener paciente por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener lista de pacientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar pacientes por gravedad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes?gravedad=LEVE",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes"
+							],
+							"query": [
+								{
+									"key": "gravedad",
+									"value": "LEVE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener citas asignadas a un paciente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes/1/citas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes",
+								"1",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar paciente por ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\" : \"Manuel\",\n    \"genero\": \"MASCULUNO\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar paciente por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar todos los pacientes",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/pacientes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"pacientes"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Colección de endpoints relacionadas con el CRUD en la BBDD del sistema de cualquier entidad de la clase 'Paciente'"
+		},
+		{
+			"name": "Salas",
+			"item": [
+				{
+					"name": "Guardar nueva sala",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"numSala\": 101\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener sala por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener lista de salas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener citas asignadas a una sala",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas/1/citas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas",
+								"1",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar sala por ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"numSala\": 201\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar sala por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar todas las salas",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/salas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"salas"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Colección de endpoints relacionadas con el CRUD en la BBDD del sistema de cualquier entidad de la clase 'Sala'"
+		},
+		{
+			"name": "Citas",
+			"item": [
+				{
+					"name": "Guardar nueva cita",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pacienteId\": 1,\n    \"salaId\": 1,\n    \"fechaCita\": \"05/12/2018\",\n    \"horaEntrada\": \"16:15:00\",\n    \"horaSalida\": \"16:45:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener cita por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener lista de citas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar cita por ID",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"horaSalida\": \"17:00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar cita por ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar todas las citas",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/hospital/api/citas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"hospital",
+								"api",
+								"citas"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Colección de endpoints relacionadas con el CRUD en la BBDD del sistema de cualquier entidad de la clase 'Cita'"
+		}
+	]
+}

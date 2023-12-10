@@ -9,14 +9,14 @@ El presente proyecto expone una aplicación Spring que simula con fines instruct
 ## 2. Dependencias utilizadas:
 Para llevar a cabo la compleción de la presente aplicación, se ha procedido a introducir las siguientes dependencias mediante el uso del archivo pom.xml del gestor de proyectos Maven:
 
-**- Spring Boot Starter Data JPA:** Dependencia diseñada para usar JPA (Java Persistance APIs), necesaria para Hibernate.
-**- Spring Boot Web:** Dependencia diseñada para crear aplicaciones Spring MVC que funcionen mediante microservicios RESTful.
-**- Spring Boot DevTools:** Herramientas para desarrollo de aplicaciones Spring Boot.
-**- Spring Boot Starter Test:** Dependencia diseñada para crear tests unitarios de aplicaciones Spring Boot, en el que se incluye JUnit5 y Mockito.
-**- Spring Boot Starter Validation:** Dependencia dedicada al manejo de validación de entrada de datos a la aplicación.
-**- H2**: Base de datos relacional integrada en la aplicación muy ligera y útil para pruebas y desarrollo.
-**- Lombok:** Dependencia que reduce el boilerplate eliminando código repetitivo. También incluye la anotación @Slf4j para generar logs eficientes.
-**- SwaggerUI:** Herramienta que facilita una documentación inteactiva de desarrollo de APIs y prueba de servicios web.
+- **Spring Boot Starter Data JPA:** Dependencia diseñada para usar JPA (Java Persistance APIs), necesaria para Hibernate.
+- **Spring Boot Web:** Dependencia diseñada para crear aplicaciones Spring MVC que funcionen mediante microservicios RESTful.
+- **Spring Boot DevTools:** Herramientas para desarrollo de aplicaciones Spring Boot.
+- **Spring Boot Starter Test:** Dependencia diseñada para crear tests unitarios de aplicaciones Spring Boot, en el que se incluye JUnit5 y Mockito.
+- **Spring Boot Starter Validation:** Dependencia dedicada al manejo de validación de entrada de datos a la aplicación.
+- **H2**: Base de datos relacional integrada en la aplicación muy ligera y útil para pruebas y desarrollo.
+- **Lombok:** Dependencia que reduce el boilerplate eliminando código repetitivo. También incluye la anotación @Slf4j para generar logs eficientes.
+- **SwaggerUI:** Herramienta que facilita una documentación inteactiva de desarrollo de APIs y prueba de servicios web.
 
 
 ## 3. Estructura del modelo:

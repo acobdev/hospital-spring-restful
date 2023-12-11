@@ -75,12 +75,12 @@ Para la realización del presente proyecto, se ha procedido a estructurar las cl
 
 Como podemos observar, dentro del directorio 'src/main/java' nos encontramos con seis paquetes divididos bajo el siguiente orden:
 
-**- Modelo:** Es la capa de la aplicación que representa los datos crudos de las tablas que conforman nuestra base de datos.
-**- DTO:** Objetos de entrada y salida de datos que se encargan de ejercer de puente entre las entidades del sistema y el usuario.
-**- Controladores:** Es la capa de la aplicación encargada de la ejecución de los endpoints con los que el usuario ejecutará llamadas HTTP.
-**- Servicios:** Es la capa de la aplicación encargada de gestionar la sección lógica subyaciente a las llamadas de la capa anterior.
-**- Repositorios:** Es la capa de la aplicación que realiza las operaciones CRUD traídas desde la capa anterior en la base de datos del sistema.
-**- Mapeadores:** Es la capa de la aplicación encargada de transformar los datos almacenados entre las entidades y los DTO de entrada y salida.
+- **Modelo:** Es la capa de la aplicación que representa los datos crudos de las tablas que conforman nuestra base de datos.
+- **DTO:** Objetos de entrada y salida de datos que se encargan de ejercer de puente entre las entidades del sistema y el usuario.
+- **Controladores:** Es la capa de la aplicación encargada de la ejecución de los endpoints con los que el usuario ejecutará llamadas HTTP.
+- **Servicios:** Es la capa de la aplicación encargada de gestionar la sección lógica subyaciente a las llamadas de la capa anterior.
+- **Repositorios:** Es la capa de la aplicación que realiza las operaciones CRUD traídas desde la capa anterior en la base de datos del sistema.
+- **Mapeadores:** Es la capa de la aplicación encargada de transformar los datos almacenados entre las entidades y los DTO de entrada y salida.
 
 Además, debemos destacar la presencia del directorio 'src/test' donde se encuentran desglosados por sus paquetes las diferentes clases de pruebas unitarias y de cobertura de todas aquellas clases que actúen como intercambio de datos (controladores, servicios y mapeadores) mediante el uso de las dependencias externas JUnit5 y Mockito.
 

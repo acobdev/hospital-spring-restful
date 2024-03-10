@@ -2,9 +2,8 @@ package dev.acobano.springrestful.hospital.controladores;
 
 import dev.acobano.springrestful.hospital.dto.entrada.PacientePostRequestDTO;
 import dev.acobano.springrestful.hospital.dto.entrada.PacientePutRequestDTO;
-import dev.acobano.springrestful.hospital.dto.salida.CitaResponseDTO;
-import dev.acobano.springrestful.hospital.dto.salida.PacienteMedicoDTO;
-import dev.acobano.springrestful.hospital.dto.salida.PacienteResponseDTO;
+import dev.acobano.springrestful.hospital.dto.salida.*;
+import dev.acobano.springrestful.hospital.excepciones.PacienteNoEncontradoExcepcion;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.ICitaMapeador;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.IPacienteMapeador;
 import dev.acobano.springrestful.hospital.modelo.entidades.Cita;
@@ -101,13 +100,12 @@ public class PacienteControlador
             ),
             @ApiResponse(
                     responseCode = "204",
-                    description = "No existe ningún paciente con el ID introducido",
+                    description = "No existe ningún paciente en el sistema con el ID introducido",
                     content = @Content
             )
     })
     @GetMapping (
             value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<PacienteResponseDTO> obtenerPaciente(
@@ -123,7 +121,7 @@ public class PacienteControlador
         Optional<Paciente> optionalPaciente = this.servicio.buscarPaciente(pacienteId);
         
         if (!optionalPaciente.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema con el ID especificado");
         else
         {
             //En caso de encontrarse, enviamos sus datos en su DTO de salida:
@@ -156,7 +154,10 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún paciente en el sistema para mostrar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -182,7 +183,7 @@ public class PacienteControlador
             listaPacientes = this.servicio.filtrarPacientesPorGravedad(gravedad);
         
         if (listaPacientes.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema para mostrar");
         else
         {
             //Mapeamos toda la lista de entidades a sus correspondientes DTO de salida:
@@ -220,12 +221,14 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún paciente en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(
             value = "/{id}/citas",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<CitaResponseDTO>> obtenerCitasPorPaciente(
@@ -241,7 +244,7 @@ public class PacienteControlador
         Optional<Paciente> optPaciente = this.servicio.buscarPaciente(pacienteId);
         
         if (!optPaciente.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema con el ID especificado");
         else
         {
             //En caso de existir, mapeamos las citas asignadas a dicho paciente:
@@ -261,7 +264,6 @@ public class PacienteControlador
      * paciente expuestos en el DTO introducido en el body del request HTTP.
      *
      * @param dtoEntrada DTO de entrada con los datos del paciente a guardar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -281,7 +283,10 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PostMapping(
@@ -294,13 +299,9 @@ public class PacienteControlador
                     schema = @Schema(implementation = PacientePostRequestDTO.class)
             )
             @Valid @RequestBody
-            PacientePostRequestDTO dtoEntrada,
-            BindingResult bindingResult
+            PacientePostRequestDTO dtoEntrada
     ){
         log.info("---> guardarPaciente");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Extraemos los datos del DTO de entrada y los guardamos en una nueva entidad Paciente:
         Paciente pacienteAGuardar = this.mapeador.convertirPostRequestDtoAEntidad(dtoEntrada);
@@ -320,7 +321,6 @@ public class PacienteControlador
      *
      * @param dtoEntrada DTO de entrada con los datos del paciente a actualizar en el sistema.
      * @param pacienteId El número identificador del paciente que se desea actualizar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -340,12 +340,18 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún paciente en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PutMapping(
@@ -365,19 +371,15 @@ public class PacienteControlador
                     example = "1"
             )
             @PathVariable("id")
-            Long pacienteId,
-            BindingResult bindingResult
+            Long pacienteId
     ){
         log.info("---> actualizarPaciente");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Buscamos en el sistema a través del servicio si el paciente con ID especificado existe:
         Optional<Paciente> optPaciente = this.servicio.buscarPaciente(pacienteId);
         
         if (!optPaciente.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema con el ID especificado");
         else
         {
             //Mapeamos los datos obtenidos del DTO de entrada en la entidad encontrada:
@@ -414,12 +416,14 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún paciente en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @DeleteMapping(
-            value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
+            value = "/{id}"
     )
     public ResponseEntity<Void> eliminarPaciente(
             @Parameter(
@@ -433,7 +437,7 @@ public class PacienteControlador
         Optional<Paciente> optPaciente = this.servicio.buscarPaciente(pacienteId);
         
         if (!optPaciente.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema con el ID especificado");
         else
         {
             //Llamamos a la capa de servicio para eliminar el paciente encontrado del sistema:
@@ -462,7 +466,10 @@ public class PacienteControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún paciente en el sistema para eliminar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @DeleteMapping
@@ -474,7 +481,7 @@ public class PacienteControlador
         List<Paciente> listaPacientes = this.servicio.leerListaPacientes();
 
         if (listaPacientes.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new PacienteNoEncontradoExcepcion("No existe ningún paciente en el sistema para eliminar");
         else
         {
             //En caso afirmativo, se llama al servicio para eliminarlos a todos:

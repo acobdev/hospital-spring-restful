@@ -81,6 +81,8 @@ Como podemos observar, dentro del directorio 'src/main/java' nos encontramos con
 - **Servicios:** Es la capa de la aplicación encargada de gestionar la sección lógica subyaciente a las llamadas de la capa anterior.
 - **Repositorios:** Es la capa de la aplicación que realiza las operaciones CRUD traídas desde la capa anterior en la base de datos del sistema.
 - **Mapeadores:** Es la capa de la aplicación encargada de transformar los datos almacenados entre las entidades y los DTO de entrada y salida.
+- **Excepciones:** Paquete en el que quedarán definidas las excepciones personalizadas empleadas para la gestión de excepciones del proyecto Spring.
+- **Validación:** Paquete donde se estipularán las clases encargadas de procesos de validación personalizados para atributos de los DTO de entrada.
 
 Además, debemos destacar la presencia del directorio 'src/test' donde se encuentran desglosados por sus paquetes las diferentes clases de pruebas unitarias y de cobertura de todas aquellas clases que actúen como intercambio de datos (controladores, servicios y mapeadores) mediante el uso de las dependencias externas JUnit5 y Mockito.
 

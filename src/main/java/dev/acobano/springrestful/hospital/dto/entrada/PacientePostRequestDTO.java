@@ -2,6 +2,7 @@ package dev.acobano.springrestful.hospital.dto.entrada;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.acobano.springrestful.hospital.validacion.anotaciones.Dni;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -83,8 +84,9 @@ public class PacientePostRequestDTO
 
     @Pattern(
             regexp = "^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$",
-            message = "El dato introducido en el campo 'DNI' no cumple las reglas de validación."
+            message = "El campo 'DNI' debe estar compuesto por ocho cifras y una letra de correcta validación."
     )
+    @Dni
     private String dni;
 
     /**
@@ -164,7 +166,10 @@ public class PacientePostRequestDTO
             description = "Fecha de nacimiento del paciente a ingresar en el sistema bajo formato 'dd/MM/YYYY HH:mm:ss'",
             example = "22/07/1973 13:35:00"
     )
-    @JsonFormat(pattern = "dd/MM/YYYY HH:mm:ss")
+    @Pattern(
+            regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/((19|20)\\d\\d) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$",
+            message = "El campo 'Fecha nacimiento' debe tener formato 'dd/MM/yyyy hh:mm:ss'"
+    )
     @NotBlank(message = "El campo 'Fecha nacimiento' de un paciente no puede estar vacío.")
     private String fechaNacimiento;
 
@@ -176,7 +181,10 @@ public class PacientePostRequestDTO
             description = "Fecha de ingreso en el hospital del paciente bajo formato 'dd/MM/YYYY HH:mm:ss'",
             example = "06/10/2012 20:45:30"
     )
-    @JsonFormat(pattern = "dd/MM/YYYY HH:mm:ss")
+    @Pattern(
+            regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/((19|20)\\d\\d) ([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d$",
+            message = "El campo 'Fecha ingreso' debe tener formato 'dd/MM/yyyy hh:mm:ss'"
+    )
     @NotBlank(message = "El campo 'Fecha ingreso' de un paciente no puede estar vacío.")
     private String fechaIngreso;
 

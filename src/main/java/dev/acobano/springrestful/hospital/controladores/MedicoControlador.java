@@ -2,8 +2,11 @@ package dev.acobano.springrestful.hospital.controladores;
 
 import dev.acobano.springrestful.hospital.dto.entrada.MedicoPostRequestDTO;
 import dev.acobano.springrestful.hospital.dto.entrada.MedicoPutRequestDTO;
+import dev.acobano.springrestful.hospital.dto.salida.ApiErrorResponseDTO;
 import dev.acobano.springrestful.hospital.dto.salida.MedicoResponseDTO;
 import dev.acobano.springrestful.hospital.dto.salida.PacienteMedicoDTO;
+import dev.acobano.springrestful.hospital.dto.salida.ValidacionErrorResponseDTO;
+import dev.acobano.springrestful.hospital.excepciones.MedicoNoEncontradoExcepcion;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.IMedicoMapeador;
 import dev.acobano.springrestful.hospital.modelo.entidades.Medico;
 import dev.acobano.springrestful.hospital.servicios.interfaces.IMedicoServicio;
@@ -101,7 +104,6 @@ public class MedicoControlador
     })
     @GetMapping (
             value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<MedicoResponseDTO> obtenerMedico(
@@ -117,7 +119,7 @@ public class MedicoControlador
         Optional<Medico> optMedico = this.servicio.buscarMedico(medicoId);
         
         if (!optMedico.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico con el ID introducido");
         else
         {
             //En caso afirmativo, lo devolvemos al body del response mapeado en su DTO de salida:
@@ -152,7 +154,10 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún médico en el sistema para mostrar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -188,7 +193,7 @@ public class MedicoControlador
             listaMedicos = this.servicio.leerListaMedicos();
         
         if (listaMedicos.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico en el sistema para mostrar");
         else
         {
             //Mapeamos la lista de entidades Médico a sus correspondientes DTOs de salida:
@@ -224,12 +229,14 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún médico en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(
             value = "/{id}/pacientes",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<PacienteMedicoDTO>> obtenerPacientesPorMedico(
@@ -245,7 +252,7 @@ public class MedicoControlador
         Optional<Medico> optMedico = this.servicio.buscarMedico(medicoId);
         
         if (!optMedico.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico en el sistema con el ID especificado");
         else
         {
             //En caso de existir, mapeamos a su DTO los pacientes asignados a ese médico:
@@ -262,7 +269,6 @@ public class MedicoControlador
      * expuestos en el DTO introducido en el body del request HTTP.
      *
      * @param dtoEntrada DTO de entrada con los datos del médico a guardar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(summary = "Guardar nuevo médico",
@@ -280,7 +286,10 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PostMapping(
@@ -293,13 +302,9 @@ public class MedicoControlador
                     schema = @Schema(implementation = MedicoPostRequestDTO.class)
             )
             @Valid @RequestBody
-            MedicoPostRequestDTO dtoEntrada,
-            BindingResult bindingResult
+            MedicoPostRequestDTO dtoEntrada
     ){
         log.info("---> guardarMedico");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Mapeamos del DTO de entrada los datos a guardar del nuevo médico:
         Medico medicoAGuardar = this.mapeador.convertirPostRequestDtoAEntidad(dtoEntrada);
@@ -319,7 +324,6 @@ public class MedicoControlador
      *
      * @param dtoEntrada DTO de entrada con los datos del médico a actualizar en el sistema.
      * @param medicoId El número identificador del médico que se desea actualizar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(summary = "Actualizar médico por ID",
@@ -337,12 +341,18 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún médico en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PutMapping(
@@ -362,19 +372,15 @@ public class MedicoControlador
                     example = "1"
             )
             @PathVariable("id")
-            Long medicoId,
-            BindingResult bindingResult
+            Long medicoId
     ){
         log.info("---> actualizarMedico");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Buscamos en el servicio si el médico con ID especificado existe:
         Optional<Medico> optMedico = this.servicio.buscarMedico(medicoId);
         
         if (!optMedico.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico en el sistema con el ID especificado");
         else
         {
             //Recogemos la entidad actualizada empleando el mapeador:
@@ -409,13 +415,13 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún médico en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
-    @DeleteMapping(
-            value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> eliminarMedico(
             @Parameter(
                     description = "El número identificador del médico que se desea eliminar del sistema",
@@ -428,7 +434,7 @@ public class MedicoControlador
         Optional<Medico> optMedico = this.servicio.buscarMedico(medicoId);
         
         if (!optMedico.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico en el sistema con el ID especificado");
         else
         {
             //En caso de existir, llamamos al método del servicio para eliminarlo:
@@ -456,7 +462,10 @@ public class MedicoControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ningún médico en el sistema para eliminar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @DeleteMapping
@@ -467,7 +476,7 @@ public class MedicoControlador
         List<Medico> listaMedicos = this.servicio.leerListaMedicos();
 
         if (listaMedicos.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new MedicoNoEncontradoExcepcion("No existe ningún médico en el sistema para eliminar");
         else
         {
             //Llamamos a la capa de servicio para eliminarlos a todos del sistema:

@@ -2,6 +2,7 @@ package dev.acobano.springrestful.hospital.dto.entrada;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.acobano.springrestful.hospital.validacion.anotaciones.Dni;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -85,9 +86,10 @@ public class PacientePutRequestDTO
     )
     @Pattern(
             regexp = "^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$",
-            message = "El dato introducido en el campo 'DNI' no cumple las reglas de validación."
+            message = "El campo 'DNI' debe estar compuesto por ocho cifras y una letra de correcta validación."
     )
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
+    @Dni
     private String dni;
 
     /**

@@ -2,7 +2,10 @@ package dev.acobano.springrestful.hospital.controladores;
 
 import dev.acobano.springrestful.hospital.dto.entrada.CitaPostRequestDTO;
 import dev.acobano.springrestful.hospital.dto.entrada.CitaPutRequestDTO;
+import dev.acobano.springrestful.hospital.dto.salida.ApiErrorResponseDTO;
 import dev.acobano.springrestful.hospital.dto.salida.CitaResponseDTO;
+import dev.acobano.springrestful.hospital.dto.salida.ValidacionErrorResponseDTO;
+import dev.acobano.springrestful.hospital.excepciones.CitaNoEncontradaExcepcion;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.ICitaMapeador;
 import dev.acobano.springrestful.hospital.modelo.entidades.Cita;
 import dev.acobano.springrestful.hospital.servicios.interfaces.ICitaServicio;
@@ -90,13 +93,15 @@ public class CitaControlador
             ),
             @ApiResponse(
                     responseCode = "204",
-                    description = "No existe ninguna cita con el ID introducido",
-                    content = @Content
+                    description = "No existe ninguna cita en el sistema con el ID introducido",
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(
             value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<CitaResponseDTO> obtenerCita(
@@ -111,7 +116,7 @@ public class CitaControlador
         Optional<Cita> optCita = this.servicio.buscarCita(citaId);
         
         if (!optCita.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new CitaNoEncontradaExcepcion("No existe ninguna cita en el sistema con el ID introducido");
         else
         {
             CitaResponseDTO dtoSalida = this.mapeador.convertirEntidadAResponseDto(optCita.get());
@@ -141,7 +146,10 @@ public class CitaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna cita en el sistema para mostrar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -151,7 +159,7 @@ public class CitaControlador
         List<Cita> listaCitas = this.servicio.leerListaCitas();
         
         if (listaCitas.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new CitaNoEncontradaExcepcion("No existe ninguna cita en el sistema para mostrar");
         else
         {
             List<CitaResponseDTO> listaDto = new ArrayList<>(listaCitas.size());
@@ -169,7 +177,6 @@ public class CitaControlador
      * cita expuestos en el DTO introducido en el body del request HTTP.
      *
      * @param dtoEntrada DTO de entrada con los datos de la cita a guardar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -189,7 +196,10 @@ public class CitaControlador
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PostMapping(
@@ -202,13 +212,9 @@ public class CitaControlador
                     schema = @Schema(implementation = CitaPostRequestDTO.class)
             )
             @Valid @RequestBody
-            CitaPostRequestDTO dtoEntrada,
-            BindingResult bindingResult
+            CitaPostRequestDTO dtoEntrada
     ) {
         log.info("---> guardarCita");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Mapeamos la nueva entidad 'Cita' a partir de los datos del DTO de entrada:
         Cita cita = this.mapeador.convertirPostResquestDtoAEntidad(dtoEntrada);
@@ -228,7 +234,6 @@ public class CitaControlador
      *
      * @param dtoEntrada DTO de entrada con los datos de la cita a actualizar en el sistema.
      * @param citaId El número identificador de la cita que se desea actualizar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -248,12 +253,18 @@ public class CitaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna cita en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PutMapping(
@@ -273,18 +284,13 @@ public class CitaControlador
                     example = "1"
             )
             @PathVariable("id")
-            Long citaId,
-            BindingResult bindingResult
+            Long citaId
     ){
         log.info("---> actualizarCita");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
         Optional<Cita> optCita = this.servicio.buscarCita(citaId);
         
         if (!optCita.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new CitaNoEncontradaExcepcion("No existe ninguna cita en el sistema con el ID especificado");
         else
         {
             //Mapeamos los datos existentes en el DTO dentro de la entidad encontrada:
@@ -321,13 +327,13 @@ public class CitaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna cita en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
-    @DeleteMapping(
-            value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> eliminarCita(
             @Parameter(
                     description = "Número identificador de la cita que se desea eliminar del sistema",
@@ -339,7 +345,7 @@ public class CitaControlador
         Optional<Cita> optCita = this.servicio.buscarCita(citaId);
         
         if (!optCita.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new CitaNoEncontradaExcepcion("No existe ninguna cita en el sistema con el ID especificado");
         else
         {
             this.servicio.eliminarCita(citaId);
@@ -367,7 +373,10 @@ public class CitaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna cita en el sistema para eliminar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @DeleteMapping
@@ -377,7 +386,7 @@ public class CitaControlador
         List<Cita> listaCitas = this.servicio.leerListaCitas();
 
         if (listaCitas.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new CitaNoEncontradaExcepcion("No existe ninguna cita en el sistema para eliminar");
         else
         {
             this.servicio.eliminarTodasCitas();

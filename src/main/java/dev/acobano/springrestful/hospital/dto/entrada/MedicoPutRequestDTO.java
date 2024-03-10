@@ -2,6 +2,7 @@ package dev.acobano.springrestful.hospital.dto.entrada;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.acobano.springrestful.hospital.validacion.anotaciones.Dni;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -74,7 +75,7 @@ public class MedicoPutRequestDTO
     )
     @Pattern(
             regexp = "^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$",
-            message = "El dato introducido en el campo 'DNI' no cumple las reglas de validación."
+            message = "El campo 'DNI' debe estar compuesto por ocho cifras y una letra de correcta validación."
     )
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private String dni;
@@ -108,7 +109,10 @@ public class MedicoPutRequestDTO
             example = "13/05/1987",
             nullable = true
     )
-    @JsonFormat(pattern = "dd/MM/YYYY")
+    @Pattern(
+            regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/((19|20)\\d\\d)$",
+            message = "El campo 'fechaGraduacion' debe tener formato 'dd/MM/yyyy'."
+    )
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private String fechaGraduacion;
 
@@ -121,7 +125,10 @@ public class MedicoPutRequestDTO
             example = "26/11/1998",
             nullable = true
     )
-    @JsonFormat(pattern = "dd/MM/YYYY")
+    @Pattern(
+            regexp = "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/((19|20)\\d\\d)$",
+            message = "El campo 'fechaIncorporacion' debe tener formato 'dd/MM/yyyy'."
+    )
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private String fechaIncorporacion;
 

@@ -1,9 +1,8 @@
 package dev.acobano.springrestful.hospital.controladores;
 
 import dev.acobano.springrestful.hospital.dto.entrada.SalaRequestDTO;
-import dev.acobano.springrestful.hospital.dto.salida.CitaResponseDTO;
-import dev.acobano.springrestful.hospital.dto.salida.PacienteMedicoDTO;
-import dev.acobano.springrestful.hospital.dto.salida.SalaResponseDTO;
+import dev.acobano.springrestful.hospital.dto.salida.*;
+import dev.acobano.springrestful.hospital.excepciones.SalaNoEncontradaExcepcion;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.ICitaMapeador;
 import dev.acobano.springrestful.hospital.mapeadores.interfaces.ISalaMapeador;
 import dev.acobano.springrestful.hospital.modelo.entidades.Cita;
@@ -96,13 +95,12 @@ public class SalaControlador
             ),
             @ApiResponse(
                     responseCode = "204",
-                    description = "No existe ninguna sala con el ID introducido",
+                    description = "No existe ninguna sala en el sistema con el ID introducido",
                     content = @Content
             )
     })
     @GetMapping(
             value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<SalaResponseDTO> obtenerSala(
@@ -118,7 +116,7 @@ public class SalaControlador
         Optional<Sala> optSala = this.servicio.buscarSala(salaId);
         
         if (!optSala.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema con el ID especificado");
         else
         {
             //Mapeamos los datos de dicha sala a su DTO de salida:
@@ -150,7 +148,10 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna sala en el sistema para mostrar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
@@ -161,7 +162,7 @@ public class SalaControlador
         List<Sala> listaSalas = this.servicio.leerListaSalas();
         
         if (listaSalas.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema para mostrar");
         else
         {
             //Las mapeamos todas a su respectivo DTO de salida:
@@ -199,12 +200,14 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna sala en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @GetMapping(
             value = "/{id}/citas",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<List<CitaResponseDTO>> obtenerCitasPorSala(
@@ -220,7 +223,7 @@ public class SalaControlador
         Optional<Sala> optSala = this.servicio.buscarSala(salaId);
         
         if (!optSala.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema con el ID especificado");
         else
         {
             //Recogemos todas las citas de la sala encontrada:
@@ -241,7 +244,6 @@ public class SalaControlador
      * sala expuestos en el DTO introducido en el body del request HTTP.
      *
      * @param dtoEntrada DTO de entrada con los datos del médico a guardar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -261,7 +263,10 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PostMapping(
@@ -274,13 +279,9 @@ public class SalaControlador
                     schema = @Schema(implementation = SalaRequestDTO.class)
             )
             @Valid @RequestBody
-            SalaRequestDTO dtoEntrada,
-            BindingResult bindingResult
+            SalaRequestDTO dtoEntrada
     ) {
         log.info("---> guardarSala");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         //Mapeamos los datos del DTO de entrada en su correspondiente entidad:
         Sala sala = this.mapeador.convertirRequestDtoAEntidad(dtoEntrada);
@@ -300,7 +301,6 @@ public class SalaControlador
      *
      * @param dtoEntrada DTO de entrada con los datos de la sala a actualizar en el sistema.
      * @param salaId Número identificador del médico que se desea actualizar en el sistema.
-     * @param bindingResult Objeto encargado de verificar la validación de los datos del DTO.
      * @return Objeto de la clase ResponseEntity en cuyo body se encuentra la respuesta de la llamada HTTP.
      */
     @Operation(
@@ -320,12 +320,18 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna sala en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             ),
             @ApiResponse(
                     responseCode = "400",
                     description = "Datos del DTO de entrada mal validados",
-                    content = @Content
+                    content = { @Content (
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ValidacionErrorResponseDTO.class)
+                    )}
             )
     })
     @PutMapping(
@@ -345,18 +351,13 @@ public class SalaControlador
                     example = "1"
             )
             @PathVariable("id")
-            Long salaId,
-            BindingResult bindingResult
+            Long salaId
     ) {
         log.info("---> actualizarSala");
-
-        if (bindingResult.hasErrors())
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-
         Optional<Sala> optSala = this.servicio.buscarSala(salaId);
         
         if (!optSala.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema con el ID especificado");
         else
         {
             //Mapeamos los datos del DTO de entrada en una entidad actualizada:
@@ -394,13 +395,13 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna sala en el sistema con el ID especificado",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
-    @DeleteMapping(
-            value = "/{id}",
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE
-    )
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<Void> eliminarSala(
             @Parameter(
                     description = "El número identificador de la sala que se desea eliminar del sistema",
@@ -414,7 +415,7 @@ public class SalaControlador
         Optional<Sala> optSala = this.servicio.buscarSala(salaId);
         
         if (!optSala.isPresent())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema con el ID especificado");
         else
         {
             //De ser así, llamamos nuevamente al servicio para eliminarla del sistema:
@@ -443,7 +444,10 @@ public class SalaControlador
             @ApiResponse(
                     responseCode = "204",
                     description = "No existe ninguna sala en el sistema para eliminar",
-                    content = @Content
+                    content = { @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiErrorResponseDTO.class)
+                    )}
             )
     })
     @DeleteMapping
@@ -454,7 +458,7 @@ public class SalaControlador
         List<Sala> listaSalas = this.servicio.leerListaSalas();
 
         if (listaSalas.isEmpty())
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            throw new SalaNoEncontradaExcepcion("No existe ninguna sala en el sistema para eliminar");
         else
         {
             //En caso afirmativo, llamamos al servicio para que las elimine todas:
